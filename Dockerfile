@@ -1,16 +1,8 @@
-FROM node:20-bullseye-slim
-
-RUN apt-get update && apt-get install -y \
-    ffmpeg \
-    git \
+FROM node:20-slim
+RUN apt-get update && apt-get install -y --no-install-recommends ffmpeg git ca-certificates \
     && rm -rf /var/lib/apt/lists/*
-
-RUN git clone https://github.com/Ainz-devs/OVL-MD-V2.git /ovl_bot
-
-WORKDIR /ovl_bot
-
-RUN npm install
-
-EXPOSE 8000
-
-CMD ["npm", "run", "Ovl"]
+WORKDIR /app
+COPY package.json ./
+RUN npm install --omit=dev
+COPY . .
+CMD ["node", "index.js"]
